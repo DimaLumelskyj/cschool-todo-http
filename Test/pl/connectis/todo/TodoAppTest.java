@@ -105,7 +105,25 @@ class TodoAppTest {
     }
 
     @Test
-    void getAllMethod_correctIDTaskParam_shouldReturnStatus200() throws IOException {
+    void getAllMethod_correctZeroTasks_shouldReturnStatus200() throws IOException {
+        with()
+                .get("/todos/getAll")
+                .then().statusCode(200)
+                .body("", hasSize(0));
+    }
+
+    @Test
+    void getAllMethod_correctOneTask_shouldReturnStatus200() throws IOException {
+        long taskID1 = addTaskAndGetId(TASK_1);
+        with()
+                .get("/todos/getAll")
+                .then().statusCode(200)
+                .body("", hasSize(1))
+                .body("id", hasItems(taskID1));
+    }
+
+    @Test
+    void getAllMethod_correctTwoTasks_shouldReturnStatus200() throws IOException {
         long taskID1 = addTaskAndGetId(TASK_1);
         long taskID2 = addTaskAndGetId(TASK_2);
         with()
